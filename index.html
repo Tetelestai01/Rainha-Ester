@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aventura Avançada da Rainha Ester</title>
+<title>Aventura da Rainha Ester</title>
 <style>
   body {
     font-family: 'Segoe UI', sans-serif;
@@ -15,7 +15,7 @@
   h1 { margin-bottom: 20px; }
   #historia {
     font-size: 1.2rem;
-    min-height: 220px;
+    min-height: 250px;
     margin-bottom: 20px;
   }
   .botaoEscolha {
@@ -56,7 +56,8 @@
 </style>
 </head>
 <body>
-<h1>Aventura Avançada da Rainha Ester</h1>
+
+<h1>Aventura da Rainha Ester</h1>
 <div id="historia"></div>
 <div id="botoes"></div>
 <button id="resetBtn" onclick="iniciarJogo()">Reiniciar</button>
@@ -64,13 +65,9 @@
 
 <script>
 let etapa = 0;
-let inventario = {
-  roupas: null,
-  aliados: [],
-  favores: []
-};
+let inventario = { roupas: null, aliados: [], favores: [] };
 
-// Função para atualizar inventário
+// Atualiza inventário na tela
 function atualizarInventario() {
   const invDiv = document.getElementById('inventario');
   invDiv.innerHTML = `<strong>Inventário:</strong><br>
@@ -79,39 +76,50 @@ function atualizarInventario() {
     Favores do Rei: ${inventario.favores.length > 0 ? inventario.favores.join(', ') : '-'}`;
 }
 
+// Todas as etapas do jogo
 const historias = [
-  { texto: "Você é Ester, nova rainha da Pérsia. Primeiro passo: escolher roupas para impressionar o rei.",
+  {
+    texto: "Você é Ester, nova rainha da Pérsia. Escolha suas roupas para impressionar o rei.",
     escolhas: [
-      { texto: "Roupas luxuosas e chamativas", proxima: 1, acao: ()=> inventario.roupas = "Luxuosas"},
-      { texto: "Roupas discretas", proxima: 2, acao: ()=> inventario.roupas = "Discretas"}
-    ]},
-  { texto: "O rei fica encantado! Você pode escolher confiar em Mordecai para planejar o próximo passo.",
+      { texto: "Roupas luxuosas e chamativas", proxima: 1, acao: ()=> inventario.roupas = "Luxuosas" },
+      { texto: "Roupas discretas", proxima: 2, acao: ()=> inventario.roupas = "Discretas" }
+    ]
+  },
+  {
+    texto: "O rei ficou encantado! Você pode confiar em Mordecai para planejar o próximo passo.",
     escolhas: [
       { texto: "Confiar em Mordecai", proxima: 3, acao: ()=> inventario.aliados.push("Mordecai") },
       { texto: "Agir sozinha", proxima: 4 }
-    ]},
-  { texto: "O rei não fica impressionado e Hamã suspeita de você. Game Over!", escolhas: [], gameover: true },
-  { texto: "Mordecai ajuda você a criar um plano para o banquete. Qual será a primeira ação?",
+    ]
+  },
+  { texto: "O rei não ficou impressionado e Hamã suspeitou de você. Game Over!", escolhas: [], gameover: true },
+  {
+    texto: "Mordecai ajuda a criar um plano para o banquete. Qual será a primeira ação?",
     escolhas: [
       { texto: "Enviar convite secreto ao rei e Hamã", proxima: 5 },
-      { texto: "Preparar roupas e jóias para impressionar ainda mais", proxima: 6, acao: ()=> inventario.favores.push("Impressão ao Rei")}
-    ]},
+      { texto: "Preparar roupas e jóias para impressionar ainda mais", proxima: 6, acao: ()=> inventario.favores.push("Impressão ao Rei") }
+    ]
+  },
   { texto: "Agir sozinha sem Mordecai falhou. Hamã fortaleceu seus planos. Game Over!", escolhas: [], gameover: true },
-  { texto: "O rei chega ao banquete. Hamã está presente. Como você denuncia os planos malignos?",
+  {
+    texto: "O rei chega ao banquete. Hamã está presente. Como denunciar os planos malignos?",
     escolhas: [
       { texto: "Diretamente, com coragem", proxima: 7 },
       { texto: "Sutilmente, esperando aliados ajudarem", proxima: 8 }
-    ]},
-  { texto: "Suas roupas impressionam, mas ainda precisa agir com inteligência. Qual será o próximo passo?",
+    ]
+  },
+  {
+    texto: "Suas roupas impressionam, mas ainda precisa agir com inteligência. Próximo passo?",
     escolhas: [
       { texto: "Confiar em Mordecai para estratégia", proxima: 3 },
       { texto: "Ir direto ao rei", proxima: 5 }
-    ]},
+    ]
+  },
   { texto: "O rei fica furioso com Hamã, que é preso. Parabéns! Você salvou seu povo!", escolhas: [], vitoria: true },
   { texto: "O plano sutil falhou. Hamã continua conspirando. Game Over!", escolhas: [], gameover: true }
 ];
 
-// Função para iniciar o jogo
+// Inicia o jogo
 function iniciarJogo() {
   etapa = 0;
   inventario = { roupas: null, aliados: [], favores: [] };
@@ -119,7 +127,7 @@ function iniciarJogo() {
   mostrarEtapa();
 }
 
-// Função para mostrar cada etapa
+// Mostra etapa atual e botões de escolha
 function mostrarEtapa() {
   const historiaAtual = historias[etapa];
   document.getElementById('historia').textContent = historiaAtual.texto;
@@ -128,7 +136,7 @@ function mostrarEtapa() {
   botoesDiv.innerHTML = '';
 
   if(historiaAtual.escolhas.length > 0) {
-    historiaAtual.escolhas.forEach((escolha) => {
+    historiaAtual.escolhas.forEach(escolha => {
       const botao = document.createElement('button');
       botao.textContent = escolha.texto;
       botao.className = 'botaoEscolha';
@@ -148,8 +156,9 @@ function mostrarEtapa() {
   }
 }
 
-// Inicializa jogo
+// Inicializa o jogo
 iniciarJogo();
 </script>
+
 </body>
 </html>
