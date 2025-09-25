@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aventura Avançada da Rainha Ester</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #8B5E3C; /* marrom */
+    color: #fff8dc; /* marfim */
+    text-align: center;
+    padding: 20px;
+  }
+  h1 { margin-bottom: 20px; }
+  #historia {
+    font-size: 1.2rem;
+    min-height: 220px;
+    margin-bottom: 20px;
+  }
+  .botaoEscolha {
+    padding: 12px 20px;
+    margin: 10px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+    background-color: #fff8dc;
+    color: #8B5E3C;
+    font-weight: bold;
+  }
+  .botaoEscolha:hover { transform: scale(1.05); }
+  #resetBtn {
+    display: none;
+    background-color: #d2691e;
+    color: #fff8dc;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  #inventario {
+    margin-top: 20px;
+    font-size: 1rem;
+    text-align: left;
+    padding: 10px;
+    border: 2px solid #fff8dc;
+    border-radius: 10px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(255, 248, 220, 0.2);
+  }
+</style>
+</head>
+<body>
+<h1>Aventura Avançada da Rainha Ester</h1>
+<div id="historia"></div>
+<div id="botoes"></div>
+<button id="resetBtn" onclick="iniciarJogo()">Reiniciar</button>
+<div id="inventario"></div>
+
+<script>
+let etapa = 0;
+let inventario = {
+  roupas: null,
+  aliados: [],
+  favores: []
+};
+
+// Função para atualizar inventário
+function atualizarInventario() {
+  const invDiv = document.getElementById('inventario');
+  invDiv.innerHTML = `<strong>Inventário:</strong><br>
+    Roupas: ${inventario.roupas || '-'}<br>
+    Aliados: ${inventario.aliados.length > 0 ? inventario.aliados.join(', ') : '-'}<br>
+    Favores do Rei: ${inventario.favores.length > 0 ? inventario.favores.join(', ') : '-'}`;
+}
+
+const historias = [
+  { texto: "Você é Ester, nova rainha da Pérsia. Primeiro passo: escolher roupas para impressionar o rei.",
+    escolhas: [
+      { texto: "Roupas luxuosas e chamativas", proxima: 1, acao: ()=> inventario.roupas = "Luxuosas"},
+      { texto: "Roupas discretas", proxima: 2, acao: ()=> inventario.roupas = "Discretas"}
+    ]},
+  { texto: "O rei fica encantado! Você pode escolher confiar em Mordecai para planejar o próximo passo.",
+    escolhas: [
+      { texto: "Confiar em Mordecai", proxima: 3, acao: ()=> inventario.aliados.push("Mordecai") },
+      { texto: "Agir sozinha", proxima: 4 }
+    ]},
+  { texto: "O rei não fica impressionado e Hamã suspeita de você. Game Over!", escolhas: [], gameover: true },
+  { texto: "Mordecai ajuda você a criar um plano para o banquete. Qual será a primeira ação?",
+    escolhas: [
+      { texto: "Enviar convite secreto ao rei e Hamã", proxima: 5 },
+      { texto: "Preparar roupas e jóias para impressionar ainda mais", proxima: 6, acao: ()=> inventario.favores.push("Impressão ao Rei")}
+    ]},
+  { texto: "Agir sozinha sem Mordecai falhou. Hamã fortaleceu seus planos. Game Over!", escolhas: [], gameover: true },
+  { texto: "O rei chega ao banquete. Hamã está presente. Como você denuncia os planos malignos?",
+    escolhas: [
+      { texto: "Diretamente, com coragem", proxima: 7 },
+      { texto: "Sutilmente, esperando aliados ajudarem", proxima: 8 }
+    ]},
+  { texto: "Suas roupas impressionam, mas ainda precisa agir com inteligência. Qual será o próximo passo?",
+    escolhas: [
+      { texto: "Confiar em Mordecai para estratégia", proxima: 3 },
+      { texto: "Ir direto ao rei", proxima: 5 }
+    ]},
+  { texto: "O rei fica furioso com Hamã, que é preso. Parabéns! Você salvou seu povo!", escolhas: [], vitoria: true },
+  { texto: "O plano sutil falhou. Hamã continua conspirando. Game Over!", escolhas: [], gameover: true }
+];
+
+// Função para iniciar o jogo
+function iniciarJogo() {
+  etapa = 0;
+  inventario = { roupas: null, aliados: [], favores: [] };
+  document.getElementById('resetBtn').style.display = 'none';
+  mostrarEtapa();
+}
+
+// Função para mostrar cada etapa
+function mostrarEtapa() {
+  const historiaAtual = historias[etapa];
+  document.getElementById('historia').textContent = historiaAtual.texto;
+
+  const botoesDiv = document.getElementById('botoes');
+  botoesDiv.innerHTML = '';
+
+  if(historiaAtual.escolhas.length > 0) {
+    historiaAtual.escolhas.forEach((escolha) => {
+      const botao = document.createElement('button');
+      botao.textContent = escolha.texto;
+      botao.className = 'botaoEscolha';
+      botao.onclick = () => {
+        if(escolha.acao) escolha.acao();
+        etapa = escolha.proxima;
+        mostrarEtapa();
+      };
+      botoesDiv.appendChild(botao);
+    });
+  }
+
+  atualizarInventario();
+
+  if(historiaAtual.gameover || historiaAtual.vitoria) {
+    document.getElementById('resetBtn').style.display = 'inline-block';
+  }
+}
+
+// Inicializa jogo
+iniciarJogo();
+</script>
+</body>
+</html>
